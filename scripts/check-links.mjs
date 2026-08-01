@@ -90,6 +90,7 @@ const requiredPages = [
   "zh/projects/index.html",
   "zh/projects/search-x/index.html",
   "zh/projects/token-atlas/index.html",
+  "zh/projects/looper/index.html",
 ];
 
 function pageUrl(relative) {
