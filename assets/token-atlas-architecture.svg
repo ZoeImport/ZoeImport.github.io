@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">Token Atlas architecture</title>
+  <desc id="description">Local AI coding clients feed an incremental collector and sanitizer. The collector sends normalized events through an authenticated private transport to an ingest and dashboard API, which persists SQLite events and rollups that drive the bilingual Token Atlas UI. A bounded bilingual briefing artifact describes the architecture and token definitions without publishing raw telemetry.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85b3d" />
+    </marker>
+    <style>
+      .bg{fill:#f3eee4}.panel{fill:#fffdf8;stroke:#171713;stroke-width:1.5}.soft{fill:#e8dfd1;stroke:#ccc2b4;stroke-width:1.5}.core{fill:#171713;stroke:#171713;stroke-width:1.5}.title{fill:#171713;font:700 24px Georgia,serif}.label{fill:#171713;font:700 15px Inter,Arial,sans-serif}.small{fill:#6f6b63;font:500 12px Inter,Arial,sans-serif}.inverse{fill:#f3eee4;font:700 15px Inter,Arial,sans-serif}.inverse-small{fill:#c8c1b6;font:500 12px Inter,Arial,sans-serif}.line{fill:none;stroke:#b85b3d;stroke-width:2;marker-end:url(#arrow)}.divider{stroke:#ccc2b4;stroke-width:1}.badge{fill:#ad4a2e}.badge-text{fill:#fffdf8;font:700 11px Inter,Arial,sans-serif;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="760" />
+
+  <rect class="core" x="330" y="24" width="540" height="66" rx="10" />
+  <text class="inverse" x="600" y="51" text-anchor="middle">Token Atlas — local-first observability</text>
+  <text class="inverse-small" x="600" y="73" text-anchor="middle">private instance · public case study</text>
+
+  <path class="line" d="M 155 220 V 326" />
+  <rect class="panel" x="40" y="120" width="230" height="100" rx="12" />
+  <text class="label" x="155" y="157" text-anchor="middle">Local AI coding clients</text>
+  <text class="small" x="155" y="181" text-anchor="middle">local tools · terminal · editor</text>
+  <text class="small" x="155" y="200" text-anchor="middle">multiple local coding clients</text>
+
+  <rect class="core" x="40" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="56" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="98" y="364" text-anchor="middle">PRIVATE</text>
+  <text class="inverse" x="155" y="392" text-anchor="middle">Collector + sanitizer</text>
+  <text class="inverse-small" x="155" y="412" text-anchor="middle">incremental · bounded</text>
+  <text class="inverse-small" x="155" y="429" text-anchor="middle">dedupe · normalize · redact</text>
+
+  <path class="line" d="M 270 385 H 316" />
+  <rect class="core" x="320" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="336" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="378" y="364" text-anchor="middle">PRIVATE</text>
+  <text class="inverse" x="435" y="392" text-anchor="middle">Private transport</text>
+  <text class="inverse-small" x="435" y="412" text-anchor="middle">authenticated · end-to-end</text>
+  <text class="inverse-small" x="435" y="429" text-anchor="middle">no public instance URL</text>
+
+  <path class="line" d="M 550 385 H 596" />
+  <rect class="core" x="600" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="616" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="658" y="364" text-anchor="middle">PRIVATE</text>
+  <text class="inverse" x="715" y="392" text-anchor="middle">Ingest + API</text>
+  <text class="inverse-small" x="715" y="412" text-anchor="middle">bounded reads</text>
+  <text class="inverse-small" x="715" y="429" text-anchor="middle">window rollups</text>
+
+  <path class="line" d="M 830 385 H 876" />
+  <rect class="core" x="880" y="330" width="260" height="110" rx="12" />
+  <rect class="badge" x="896" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="938" y="364" text-anchor="middle">PRIVATE</text>
+  <text class="inverse" x="1010" y="392" text-anchor="middle">SQLite events + rollups</text>
+  <text class="inverse-small" x="1010" y="412" text-anchor="middle">7/30/90-day windows</text>
+  <text class="inverse-small" x="1010" y="429" text-anchor="middle">prefetch synced with URL state</text>
+
+  <path class="line" d="M 1010 440 V 556" />
+  <rect class="panel" x="880" y="560" width="260" height="120" rx="12" />
+  <text class="label" x="1010" y="598" text-anchor="middle">Bilingual Token Atlas UI</text>
+  <text class="small" x="1010" y="620" text-anchor="middle">local dashboard · EN/中文</text>
+  <text class="small" x="1010" y="639" text-anchor="middle">synthetic values · no raw telemetry</text>
+
+  <path class="line" d="M 205 580 V 444" />
+  <rect class="soft" x="40" y="580" width="330" height="120" rx="12" />
+  <text class="label" x="205" y="618" text-anchor="middle">Bounded bilingual briefing</text>
+  <text class="small" x="205" y="640" text-anchor="middle">architecture + token definitions only</text>
+  <text class="small" x="205" y="659" text-anchor="middle">no prompts · no usage telemetry · no paths</text>
+</svg>

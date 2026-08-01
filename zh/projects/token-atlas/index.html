@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content="Token Atlas 是一个 local-first、具有明确隐私边界的 AI 工具活动可观测仪表盘，用于理解多个 coding clients 的使用结构。" />
+    <meta property="og:title" content="Token Atlas — Local-first AI 可观测仪表盘" />
+    <meta property="og:description" content="一个 local-first、具有明确隐私边界的 AI 工具活动可观测仪表盘，用于理解多个 coding clients 的使用结构。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content="https://zoeimport.github.io/zh/projects/token-atlas/" />
+    <link rel="canonical" href="https://zoeimport.github.io/zh/projects/token-atlas/" />
+    <link rel="alternate" hreflang="en" href="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://zoeimport.github.io/zh/projects/token-atlas/" />
+    <link rel="alternate" hreflang="x-default" href="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>Token Atlas — Local-first AI 可观测仪表盘</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href="/zh/">ZoeImport<span>.</span></a>
+        <nav class="primary-nav" aria-label="主导航">
+          <a href="/zh/interests/">兴趣</a>
+          <a href="/zh/skills/">技能</a>
+          <a href="/zh/projects/" aria-current="page">作品</a>
+          <a class="github-nav" href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+          <span class="language-switch" aria-label="语言切换">
+            <a href="/projects/token-atlas/" lang="en" hreflang="en">EN</a>
+            <span aria-current="true">中文</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page-shell">
+      <section class="project-hero" aria-labelledby="project-title">
+        <div>
+          <span class="eyebrow">作品 03 / Local-first AI 可观测性</span>
+          <h1 id="project-title">Token Atlas<em>.</em></h1>
+          <p class="lede">一个 local-first、具有明确隐私边界的 AI 工具活动可观测仪表盘，用于理解多个 coding clients 的使用结构。</p>
+          <div class="project-actions">
+            <a class="button button--solid" href="/zh/projects/">全部作品</a>
+            <a class="button" href="https://github.com/ZoeImport" rel="me">GitHub 主页 ↗</a>
+          </div>
+        </div>
+        <aside class="project-meta" aria-label="项目事实">
+          <div class="meta-row"><span>状态</span><strong><i class="status-dot"></i>公开案例 · 私有实例</strong></div>
+          <div class="meta-row"><span>形态</span><strong>采集 + Ingest + 本地仪表盘</strong></div>
+          <div class="meta-row"><span>存储</span><strong>SQLite 事件与聚合</strong></div>
+          <div class="meta-row"><span>交付</span><strong>双语界面 · Docker</strong></div>
+        </aside>
+      </section>
+
+      <section class="project-story" aria-labelledby="why-title">
+        <div><h2 id="why-title">为什么做它。</h2></div>
+        <div class="story-copy">
+          <p>理解 AI 工具的使用情况，不应该以把私有上下文上传到你无法控制的服务为代价。</p>
+          <p>多个本地 coding clients 各自记录了它们的 Prompt、回复与 token 使用量。看到合并后的结构——在哪个 client、哪个时间窗口发生了多少工作——有助于调整 context、缓存与成本。</p>
+          <p>Token Atlas 是 local-first 且有隐私边界的：采集运行在你自己的机器上，传输通道经过认证且私有，只有经过脱敏的有界视图才会被总结成公开说明。</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="architecture-title">
+        <div><h2 id="architecture-title">实现架构。</h2></div>
+        <div class="story-copy story-copy--wide">
+          <p>增量采集器先对事件去重、归一化与脱敏，再通过认证的私有传输通道交给 Ingest API，最终持久化为 SQLite 事件与聚合结果。</p>
+          <figure class="architecture-figure">
+            <img src="/assets/token-atlas-architecture-zh.svg" alt="Token Atlas 架构：本地 AI coding clients 将事件送入增量采集与脱敏模块；采集模块通过认证的私有传输通道把归一化事件交给 Ingest 与仪表盘 API，后者把事件与聚合结果持久化到 SQLite，最终驱动双语 Token Atlas UI。一份有界的双语 briefing 只描述架构与 token 口径，不发布原始遥测。" />
+            <figcaption>私有管线进，有界的双语说明出。</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="token-metric-title">
+        <div><h2 id="token-metric-title">Token 如何统计。</h2></div>
+        <div class="story-copy">
+          <p>两个聚合指标让口径清晰，并避免重复相加：</p>
+          <ul class="check-list">
+            <li><strong>Fresh Tokens</strong> = 非缓存 input + output + reasoning</li>
+            <li><strong>Processed Tokens</strong> = Fresh Tokens + cache reads</li>
+          </ul>
+          <p>归一化之后，cache input、cache output 与 cache reasoning 是互斥字段，同一批 token 不会被重复计入。</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="ranges-title">
+        <div><h2 id="ranges-title">时间窗口。</h2></div>
+        <div class="story-copy">
+          <p>仪表盘提供 7、30、90 天三种范围。选中的范围会并行预取，并与 URL state 保持同步，因此切换范围时永远不会把实时 API 数据与过期的静态快照混在一起。</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="boundary-title">
+        <div><h2 id="boundary-title">诚实边界。</h2></div>
+        <div class="story-copy">
+          <p>Token Atlas 是关于一个私有实例的案例说明，而不是对外发布的产品 Demo。</p>
+          <ul class="check-list check-list--roadmap">
+            <li>公开页面只发布架构与 token 口径；绝不发布真实使用遥测、Prompt、回复、session 标签、本地路径、主机、端口、数据库或凭据。</li>
+            <li>本站出现的任何示意数值均为合成或无数值；它们不来自运行中的实例。</li>
+            <li>不提供私有实例 URL，也不把任何访问 token 放入 Pages 仓库。</li>
+            <li>归一化保证 cache input、output 与 reasoning 在聚合前互斥，因此 Processed Tokens 不会被重复计数放大。</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="privacy-callout" aria-labelledby="evidence-title">
+        <span class="eyebrow">公开证据边界</span>
+        <h2 id="evidence-title">案例说明即边界。</h2>
+        <p>本页只解释仪表盘衡量什么、token 如何统计。它不包含使用统计、session 数据、访问 token、环境变量，也不包含 Token Atlas 实例的任何私有运行细节。</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div>
+          <p class="footer-title">理解使用，保持本地，保持诚实。</p>
+          <p class="footer-copy">Token Atlas 把完整图景留在私有侧，只发布一份有界的说明。</p>
+        </div>
+        <nav class="footer-links" aria-label="页脚导航">
+          <a href="/zh/projects/">全部作品</a>
+          <a href="/zh/projects/search-x/">SearchX</a>
+          <a href="/zh/interests/">兴趣</a>
+          <a href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content="SearchX is a provider-aware WebSearch and policy-guarded WebFetch backend built as two independently deployable Go services." />
+    <meta property="og:title" content="SearchX — Search &amp; Read Infrastructure" />
+    <meta property="og:description" content="Capability-aware search planning, HTTP-path SSRF defenses, resilient caching, and explicit provider behavior in Go." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="canonical" href="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="alternate" hreflang="en" href="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://zoeimport.github.io/zh/projects/search-x/" />
+    <link rel="alternate" hreflang="x-default" href="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>SearchX — Search &amp; Read Infrastructure</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href="/">ZoeImport<span>.</span></a>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <a href="/interests/">Interests</a>
+          <a href="/skills/">Skills</a>
+          <a href="/projects/" aria-current="page">Projects</a>
+          <a class="github-nav" href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+          <span class="language-switch" aria-label="Language switch">
+            <span aria-current="true">EN</span>
+            <a href="/zh/projects/search-x/" lang="zh-CN" hreflang="zh-CN">中文</a>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page-shell">
+      <section class="project-hero" aria-labelledby="project-title">
+        <div>
+          <span class="eyebrow">Project 02 / Search &amp; Read Infrastructure</span>
+          <h1 id="project-title">SearchX<em>.</em></h1>
+          <p class="lede">A provider-aware WebSearch service and a policy-guarded WebFetch pipeline, built as two independently deployable Go applications with explicit failure, cache, and fallback behavior.</p>
+          <div class="project-actions">
+            <a class="button button--solid" href="https://github.com/ZoeImport/search-x">View source on GitHub ↗</a>
+            <a class="button" href="/projects/">All projects</a>
+          </div>
+        </div>
+        <aside class="project-meta" aria-label="Project facts">
+          <div class="meta-row"><span>Status</span><strong><i class="status-dot"></i>Public · runnable</strong></div>
+          <div class="meta-row"><span>Shape</span><strong>WebSearch + WebFetch + Runtime</strong></div>
+          <div class="meta-row"><span>Language</span><strong>Go 1.26</strong></div>
+          <div class="meta-row"><span>Delivery</span><strong>OpenAPI · Docker · Kubernetes</strong></div>
+        </aside>
+      </section>
+
+      <section class="project-story" aria-labelledby="why-title">
+        <div><h2 id="why-title">Why it exists.</h2></div>
+        <div class="story-copy">
+          <p>Search reliability is more than sending an HTTP request and accepting a 200 response.</p>
+          <p>Providers differ in supported query syntax, continuation state, browser requirements, capacity, CAPTCHA behavior, and result shape. Content reading adds a separate risk surface: SSRF, redirects, JavaScript shells, extraction quality, and output conversion.</p>
+          <p>SearchX keeps those concerns behind two atomic services. WebSearch returns ranked links and opaque pagination state; WebFetch applies explicit URL policy and turns one public URL into a canonical document. They can evolve and deploy independently instead of becoming one coupled scraping process.</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="architecture-title">
+        <div><h2 id="architecture-title">Implementation architecture.</h2></div>
+        <div class="story-copy story-copy--wide">
+          <p>The external gateway routes one contract to the appropriate service. Each service owns its policy, orchestration, adapters, and degradation path.</p>
+          <figure class="architecture-figure">
+            <img src="/assets/searchx-architecture.svg" alt="SearchX architecture: API Gateway routes requests into separate WebSearch and WebFetch services. Public WebSearch requests execute an ordered provider chain; each provider adapter leases one profile before results are canonicalized and cursor state is encrypted. WebFetch validates and pins public targets on the HTTP path, then may fall back to Chromium, where only the final URL is rechecked and DNS is not pinned. Both services use a shared Go runtime and deploy through Docker and Kubernetes." />
+            <figcaption>Two deployable services share operational primitives, not business pipelines.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="search-flow-title">
+        <div><h2 id="search-flow-title">WebSearch flow.</h2></div>
+        <div class="story-copy">
+          <p>A request is normalized once, then executed only by providers that can honor its declared semantics.</p>
+          <ol class="loop-steps">
+            <li><span>01</span><strong>Contract</strong><p>Gin validates the request, timeout, region, routing order, filters, advanced query options, and optional opaque cursor.</p></li>
+            <li><span>02</span><strong>Search plan</strong><p>A capability-aware compiler maps supported operators to Brave or DuckDuckGo and removes incompatible providers before execution.</p></li>
+            <li><span>03</span><strong>Cache guard</strong><p>Fresh memory cache and <code>singleflight</code> collapse identical work; stale cache is an explicit degraded fallback when live search fails.</p></li>
+            <li><span>04</span><strong>Ordered provider chain</strong><p>Public requests execute provider adapters sequentially; each adapter leases one profile. The first valid result wins, while a retryable failure advances to the next provider.</p></li>
+            <li><span>05</span><strong>Provider adapters</strong><p>Baidu, Bing, Brave, and DuckDuckGo adapters own transport, browser state, parser behavior, and typed failure classification.</p></li>
+            <li><span>06</span><strong>Stable output</strong><p>URLs are canonicalized, domain rules are enforced, duplicates are removed, and AES-GCM protects provider continuation inside a request-bound cursor.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="fetch-flow-title">
+        <div><h2 id="fetch-flow-title">WebFetch flow.</h2></div>
+        <div class="story-copy">
+          <p>Content reading is an explicit pipeline with replaceable seams and quality decisions at every stage.</p>
+          <ol class="loop-steps">
+            <li><span>01</span><strong>Safe target</strong><p>The URL policy accepts only HTTP(S), rejects credentials and unsafe ports, resolves every address, blocks private and reserved ranges, and pins approved DNS answers.</p></li>
+            <li><span>02</span><strong>Site strategy</strong><p>A longest-domain and path registry selects optional site-specific preparation while the generic strategy preserves default behavior.</p></li>
+            <li><span>03</span><strong>HTTP first</strong><p>A bounded HTTP reader handles redirects and body limits before any browser is allocated.</p></li>
+            <li><span>04</span><strong>Extract &amp; evaluate</strong><p>MIME detection chooses HTML or plain-text extraction. A quality evaluator classifies usable content, JavaScript shells, short pages, login walls, and CAPTCHA pages.</p></li>
+            <li><span>05</span><strong>Browser fallback</strong><p>Eligible failures and render-required pages use a slot-limited Chromium adapter, then pass through the same extraction and quality path. This branch rechecks the final URL but does not pin DNS or intercept subresource requests.</p></li>
+            <li><span>06</span><strong>Canonical output</strong><p>Readability-backed content is cached independently of presentation, then converted to Markdown or text and truncated by Unicode code point.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="stack-title">
+        <div><h2 id="stack-title">Technical stack.</h2></div>
+        <div class="story-copy">
+          <p>The stack is deliberately small: standard Go concurrency around focused adapters for browser automation, extraction, and delivery.</p>
+          <div class="interface-grid">
+            <article class="interface-card">
+              <span>Runtime</span>
+              <h3>Go 1.26</h3>
+              <p><code>context</code>, goroutines, bounded channels, <code>singleflight</code>, typed domain errors, and strict dependency injection for deterministic tests.</p>
+            </article>
+            <article class="interface-card">
+              <span>HTTP &amp; contracts</span>
+              <h3>Gin + OpenAPI</h3>
+              <p>Gin 1.12 HTTP adapters, strict YAML configuration, CORS, request-scoped timeouts, health/readiness routes, and versioned API schemas.</p>
+            </article>
+            <article class="interface-card">
+              <span>Browser &amp; parsing</span>
+              <h3>chromedp + goquery</h3>
+              <p>Chrome DevTools Protocol automation, provider parsers, Readeck Readability, HTML-to-Markdown, MIME detection, and plain-text extraction.</p>
+            </article>
+            <article class="interface-card">
+              <span>Security &amp; state</span>
+              <h3>SSRF policy + AES-GCM</h3>
+              <p>DNS/IP rules and target pinning on the HTTP reader path; encrypted, expiring, request-bound cursor state for search pagination.</p>
+            </article>
+            <article class="interface-card">
+              <span>Delivery</span>
+              <h3>Docker + Kubernetes</h3>
+              <p>Separate images and manifests for WebSearch and WebFetch, shared Runtime helpers, environment/YAML overlays, and API Gateway integration.</p>
+            </article>
+            <article class="interface-card">
+              <span>Verification</span>
+              <h3>Test · race · vet · build</h3>
+              <p>Unit and integration fixtures, provider parser suites, cursor and SSRF tests, Go benchmarks, race detection, vet, and reproducible curl, Python, and Go examples.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="delivered-title">
+        <div><h2 id="delivered-title">What is implemented.</h2></div>
+        <div class="story-copy">
+          <ul class="check-list">
+            <li>Ordered Baidu, Bing, Brave, and DuckDuckGo execution with typed failure handling, one-profile leases, capacity state, quarantine, and sequential provider fallback.</li>
+            <li>Capability-aware advanced search, include/exclude domain enforcement, URL canonicalization, deduplication, and encrypted continuation cursors.</li>
+            <li>Fresh/stale in-memory caching, duplicate-request collapse, bounded live concurrency, queue limits, and request-scoped diagnostics.</li>
+            <li>Single-URL fetch with SSRF defenses on the HTTP path, bounded redirects and bodies, HTML/plain-text extraction, quality gates, and Chromium fallback.</li>
+            <li>Markdown/text conversion, OpenAPI contracts, API Gateway examples, local demo, Docker images, Kubernetes manifests, and shared logging/timeout helpers.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="boundary-title">
+        <div><h2 id="boundary-title">Honest boundaries.</h2></div>
+        <div class="story-copy">
+          <p>SearchX is retrieval infrastructure, not an answer engine.</p>
+          <ul class="check-list check-list--roadmap">
+            <li>WebSearch returns provider-ranked links; it does not fetch result bodies, run an LLM, synthesize answers, or perform a semantic reranking pass.</li>
+            <li>The capacity-aware auto router exists for internal calls, but public HTTP requests materialize a provider list and use strict sequential fallback; providers are not queried in parallel or aggregated.</li>
+            <li>WebFetch reads one public URL. PDF, Office files, images, OCR, batches, authenticated pages, paywalls, and CAPTCHA solving are outside the current contract.</li>
+            <li>The HTTP reader pins validated DNS targets and checks redirects. Chromium fallback currently rechecks only the final URL; it does not pin DNS or intercept subresource requests, so the two paths do not provide identical SSRF guarantees.</li>
+            <li>Cache and browser profiles are Pod-local by design; WebSearch cursors require a shared secret across replicas, but the services do not depend on a shared database.</li>
+          </ul>
+          <p><a class="evidence-link" href="https://github.com/ZoeImport/search-x/tree/main/websearch/internal">Inspect WebSearch modules ↗</a><br /><a class="evidence-link" href="https://github.com/ZoeImport/search-x/tree/main/webfetch/internal">Inspect WebFetch modules ↗</a></p>
+        </div>
+      </section>
+
+      <aside class="privacy-callout" aria-labelledby="evidence-title">
+        <span class="eyebrow">Public evidence boundary</span>
+        <h2 id="evidence-title">Architecture claims map to public code.</h2>
+        <p>This case study describes the public repository and its checked-in contracts. It includes no API keys, debug artifacts, browser profiles, private search history, runtime logs, or deployment secrets.</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div>
+          <p class="footer-title">Search links. Read deliberately. Degrade explicitly.</p>
+          <p class="footer-copy">The source is public at github.com/ZoeImport/search-x.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="/projects/">All projects</a>
+          <a href="/projects/looper/">Looper</a>
+          <a href="/skills/">Skills</a>
+          <a href="https://github.com/ZoeImport/search-x">GitHub ↗</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

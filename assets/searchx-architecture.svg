@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">SearchX implementation architecture</title>
+  <desc id="description">API Gateway sends requests to independent WebSearch and WebFetch services. Public WebSearch requests use an ordered provider chain with one profile lease per adapter. WebFetch pins validated targets on its HTTP path; Chromium fallback rechecks the final URL without DNS pinning. A shared Go runtime and delivery layer support both services.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85b3d" />
+    </marker>
+    <style>
+      .bg{fill:#f3eee4}.panel{fill:#fffdf8;stroke:#171713;stroke-width:1.5}.soft{fill:#e8dfd1;stroke:#ccc2b4;stroke-width:1.5}.core{fill:#171713;stroke:#171713;stroke-width:1.5}.title{fill:#171713;font:700 24px Georgia,serif}.label{fill:#171713;font:700 15px Inter,Arial,sans-serif}.small{fill:#6f6b63;font:500 12px Inter,Arial,sans-serif}.inverse{fill:#f3eee4;font:700 15px Inter,Arial,sans-serif}.inverse-small{fill:#c8c1b6;font:500 12px Inter,Arial,sans-serif}.line{fill:none;stroke:#b85b3d;stroke-width:2;marker-end:url(#arrow)}.divider{stroke:#ccc2b4;stroke-width:1}.badge{fill:#b85b3d}.badge-text{fill:#fffdf8;font:700 11px Inter,Arial,sans-serif;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="760" />
+
+  <rect class="core" x="410" y="24" width="380" height="74" rx="10" />
+  <text class="inverse" x="600" y="53" text-anchor="middle">API Gateway / HTTP contracts</text>
+  <text class="inverse-small" x="600" y="76" text-anchor="middle">Authorization · routing · timeout · response envelope</text>
+
+  <path class="line" d="M 520 98 V 132 H 300 V 158" />
+  <path class="line" d="M 680 98 V 132 H 900 V 158" />
+
+  <rect class="panel" x="44" y="158" width="512" height="444" rx="14" />
+  <rect class="badge" x="68" y="182" width="112" height="28" rx="14" />
+  <text class="badge-text" x="124" y="200" text-anchor="middle">SEARCH API</text>
+  <text class="title" x="68" y="246">WebSearch</text>
+  <text class="small" x="68" y="270">Provider-aware ranked links and opaque pagination</text>
+
+  <rect class="soft" x="68" y="300" width="214" height="70" rx="8" />
+  <text class="label" x="175" y="327" text-anchor="middle">Contract + SearchPlan</text>
+  <text class="small" x="175" y="350" text-anchor="middle">filters · capability compiler</text>
+  <rect class="soft" x="318" y="300" width="214" height="70" rx="8" />
+  <text class="label" x="425" y="327" text-anchor="middle">Cache + singleflight</text>
+  <text class="small" x="425" y="350" text-anchor="middle">fresh · stale · live guard</text>
+  <path class="line" d="M 282 335 H 314" />
+
+  <rect class="soft" x="68" y="400" width="214" height="82" rx="8" />
+  <text class="label" x="175" y="429" text-anchor="middle">Ordered Provider Chain</text>
+  <text class="small" x="175" y="451" text-anchor="middle">sequential fallback</text>
+  <text class="small" x="175" y="468" text-anchor="middle">profile lease · capacity state</text>
+  <path class="line" d="M 425 370 V 388 H 175 V 396" />
+
+  <rect class="core" x="318" y="400" width="214" height="82" rx="8" />
+  <text class="inverse" x="425" y="429" text-anchor="middle">Provider adapters</text>
+  <text class="inverse-small" x="425" y="451" text-anchor="middle">Baidu · Bing · Brave</text>
+  <text class="inverse-small" x="425" y="468" text-anchor="middle">DuckDuckGo · HTTP/Chrome</text>
+  <path class="line" d="M 282 441 H 314" />
+
+  <rect class="soft" x="68" y="512" width="464" height="66" rx="8" />
+  <text class="label" x="300" y="538" text-anchor="middle">Canonicalize · domain policy · deduplicate · cursor</text>
+  <text class="small" x="300" y="560" text-anchor="middle">AES-GCM continuation state bound to the normalized request</text>
+  <path class="line" d="M 425 482 V 508" />
+
+  <rect class="panel" x="644" y="158" width="512" height="444" rx="14" />
+  <rect class="badge" x="668" y="182" width="106" height="28" rx="14" />
+  <text class="badge-text" x="721" y="200" text-anchor="middle">FETCH API</text>
+  <text class="title" x="668" y="246">WebFetch</text>
+  <text class="small" x="668" y="270">Policy-guarded URL to canonical Markdown or text</text>
+
+  <rect class="soft" x="668" y="300" width="214" height="70" rx="8" />
+  <text class="label" x="775" y="327" text-anchor="middle">Safe URL Policy</text>
+  <text class="small" x="775" y="350" text-anchor="middle">resolve all · block · pin</text>
+  <rect class="soft" x="918" y="300" width="214" height="70" rx="8" />
+  <text class="label" x="1025" y="327" text-anchor="middle">Cache + singleflight</text>
+  <text class="small" x="1025" y="350" text-anchor="middle">canonical documents</text>
+  <path class="line" d="M 882 335 H 914" />
+
+  <rect class="core" x="668" y="400" width="214" height="82" rx="8" />
+  <text class="inverse" x="775" y="429" text-anchor="middle">HTTP first</text>
+  <text class="inverse-small" x="775" y="451" text-anchor="middle">redirect/body bounds</text>
+  <text class="inverse-small" x="775" y="468" text-anchor="middle">MIME · extract · quality</text>
+  <path class="line" d="M 1025 370 V 388 H 775 V 396" />
+
+  <rect class="core" x="918" y="400" width="214" height="82" rx="8" />
+  <text class="inverse" x="1025" y="429" text-anchor="middle">Chromium fallback</text>
+  <text class="inverse-small" x="1025" y="451" text-anchor="middle">slot-limited · final URL recheck</text>
+  <text class="inverse-small" x="1025" y="468" text-anchor="middle">no DNS pinning · same extract path</text>
+  <path class="line" d="M 882 441 H 914" />
+
+  <rect class="soft" x="668" y="512" width="464" height="66" rx="8" />
+  <text class="label" x="900" y="538" text-anchor="middle">Readability document · Markdown/Text converter</text>
+  <text class="small" x="900" y="560" text-anchor="middle">Unicode-aware truncation · typed warnings and attempts</text>
+  <path class="line" d="M 1025 482 V 508" />
+
+  <path class="line" d="M 300 602 V 626 H 468 V 650" />
+  <path class="line" d="M 900 602 V 626 H 732 V 650" />
+  <rect class="core" x="244" y="650" width="712" height="78" rx="10" />
+  <line x1="600" y1="666" x2="600" y2="712" stroke="#4b4942" />
+  <text class="inverse" x="422" y="680" text-anchor="middle">Shared Go Runtime</text>
+  <text class="inverse-small" x="422" y="704" text-anchor="middle">slog · rolling logs · request timeouts</text>
+  <text class="inverse" x="778" y="680" text-anchor="middle">Delivery</text>
+  <text class="inverse-small" x="778" y="704" text-anchor="middle">OpenAPI · Docker · Kubernetes · examples</text>
+</svg>

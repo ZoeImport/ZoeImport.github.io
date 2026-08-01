@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">Token Atlas 架构</title>
+  <desc id="description">本地 AI coding clients 将事件送入增量采集与脱敏模块；采集模块通过认证的私有传输通道把归一化事件交给 Ingest 与仪表盘 API，后者把事件与聚合结果持久化到 SQLite，最终驱动双语 Token Atlas UI。一份有界的双语 briefing 只描述架构与 token 口径，不发布原始遥测。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85b3d" />
+    </marker>
+    <style>
+      .bg{fill:#f3eee4}.panel{fill:#fffdf8;stroke:#171713;stroke-width:1.5}.soft{fill:#e8dfd1;stroke:#ccc2b4;stroke-width:1.5}.core{fill:#171713;stroke:#171713;stroke-width:1.5}.title{fill:#171713;font:700 24px "Songti SC","STSong",Georgia,serif}.label{fill:#171713;font:700 15px "PingFang SC","Microsoft YaHei",Arial,sans-serif}.small{fill:#6f6b63;font:500 12px "PingFang SC","Microsoft YaHei",Arial,sans-serif}.inverse{fill:#f3eee4;font:700 15px "PingFang SC","Microsoft YaHei",Arial,sans-serif}.inverse-small{fill:#c8c1b6;font:500 12px "PingFang SC","Microsoft YaHei",Arial,sans-serif}.line{fill:none;stroke:#b85b3d;stroke-width:2;marker-end:url(#arrow)}.divider{stroke:#ccc2b4;stroke-width:1}.badge{fill:#ad4a2e}.badge-text{fill:#fffdf8;font:700 11px "PingFang SC","Microsoft YaHei",Arial,sans-serif;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="760" />
+
+  <rect class="core" x="330" y="24" width="540" height="66" rx="10" />
+  <text class="inverse" x="600" y="51" text-anchor="middle">Token Atlas — local-first 可观测仪表盘</text>
+  <text class="inverse-small" x="600" y="73" text-anchor="middle">私有实例 · 公开案例说明</text>
+
+  <path class="line" d="M 155 220 V 326" />
+  <rect class="panel" x="40" y="120" width="230" height="100" rx="12" />
+  <text class="label" x="155" y="157" text-anchor="middle">本地 AI coding clients</text>
+  <text class="small" x="155" y="181" text-anchor="middle">本地工具 · 终端 · 编辑器</text>
+  <text class="small" x="155" y="200" text-anchor="middle">多个本地 coding clients</text>
+
+  <rect class="core" x="40" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="56" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="98" y="364" text-anchor="middle">私有</text>
+  <text class="inverse" x="155" y="392" text-anchor="middle">采集 + 脱敏</text>
+  <text class="inverse-small" x="155" y="412" text-anchor="middle">增量 · 有界</text>
+  <text class="inverse-small" x="155" y="429" text-anchor="middle">去重 · 归一化 · 脱敏</text>
+
+  <path class="line" d="M 270 385 H 316" />
+  <rect class="core" x="320" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="336" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="378" y="364" text-anchor="middle">私有</text>
+  <text class="inverse" x="435" y="392" text-anchor="middle">认证的私有传输</text>
+  <text class="inverse-small" x="435" y="412" text-anchor="middle">认证 · 端到端</text>
+  <text class="inverse-small" x="435" y="429" text-anchor="middle">不提供公网实例 URL</text>
+
+  <path class="line" d="M 550 385 H 596" />
+  <rect class="core" x="600" y="330" width="230" height="110" rx="12" />
+  <rect class="badge" x="616" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="658" y="364" text-anchor="middle">私有</text>
+  <text class="inverse" x="715" y="392" text-anchor="middle">Ingest + 仪表盘 API</text>
+  <text class="inverse-small" x="715" y="412" text-anchor="middle">有界读取</text>
+  <text class="inverse-small" x="715" y="429" text-anchor="middle">窗口聚合</text>
+
+  <path class="line" d="M 830 385 H 876" />
+  <rect class="core" x="880" y="330" width="260" height="110" rx="12" />
+  <rect class="badge" x="896" y="348" width="84" height="24" rx="12" />
+  <text class="badge-text" x="938" y="364" text-anchor="middle">私有</text>
+  <text class="inverse" x="1010" y="392" text-anchor="middle">SQLite 事件与聚合</text>
+  <text class="inverse-small" x="1010" y="412" text-anchor="middle">7/30/90 天窗口</text>
+  <text class="inverse-small" x="1010" y="429" text-anchor="middle">预取与 URL state 同步</text>
+
+  <path class="line" d="M 1010 440 V 556" />
+  <rect class="panel" x="880" y="560" width="260" height="120" rx="12" />
+  <text class="label" x="1010" y="598" text-anchor="middle">双语 Token Atlas UI</text>
+  <text class="small" x="1010" y="620" text-anchor="middle">本地仪表盘 · 中英双语</text>
+  <text class="small" x="1010" y="639" text-anchor="middle">只展示合成或无数值示意</text>
+
+  <path class="line" d="M 205 580 V 444" />
+  <rect class="soft" x="40" y="580" width="330" height="120" rx="12" />
+  <text class="label" x="205" y="618" text-anchor="middle">有界的双语 briefing</text>
+  <text class="small" x="205" y="640" text-anchor="middle">只发布架构与 token 口径</text>
+  <text class="small" x="205" y="659" text-anchor="middle">无 Prompt · 无使用遥测 · 无本地路径</text>
+</svg>

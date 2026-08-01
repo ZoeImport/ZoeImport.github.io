@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content="SearchX 是由两个可独立部署的 Go 服务构成的 Provider-aware WebSearch 与策略防护型 WebFetch 后端。" />
+    <meta property="og:title" content="SearchX — 搜索与正文读取基础设施" />
+    <meta property="og:description" content="用 Go 实现能力感知的搜索计划、HTTP 路径 SSRF 防线、弹性缓存与明确的 Provider 行为。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content="https://zoeimport.github.io/zh/projects/search-x/" />
+    <link rel="canonical" href="https://zoeimport.github.io/zh/projects/search-x/" />
+    <link rel="alternate" hreflang="en" href="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://zoeimport.github.io/zh/projects/search-x/" />
+    <link rel="alternate" hreflang="x-default" href="https://zoeimport.github.io/projects/search-x/" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>SearchX — 搜索与正文读取基础设施</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href="/zh/">ZoeImport<span>.</span></a>
+        <nav class="primary-nav" aria-label="主导航">
+          <a href="/zh/interests/">兴趣</a>
+          <a href="/zh/skills/">技能</a>
+          <a href="/zh/projects/" aria-current="page">作品</a>
+          <a class="github-nav" href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+          <span class="language-switch" aria-label="语言切换">
+            <a href="/projects/search-x/" lang="en" hreflang="en">EN</a>
+            <span aria-current="true">中文</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page-shell">
+      <section class="project-hero" aria-labelledby="project-title">
+        <div>
+          <span class="eyebrow">作品 02 / 搜索与正文读取基础设施</span>
+          <h1 id="project-title">SearchX<em>.</em></h1>
+          <p class="lede">一个 Provider-aware WebSearch 服务与一条带显式策略防护的 WebFetch 管线：两个 Go 应用可独立部署，并明确呈现失败、缓存与降级行为。</p>
+          <div class="project-actions">
+            <a class="button button--solid" href="https://github.com/ZoeImport/search-x">在 GitHub 查看源码 ↗</a>
+            <a class="button" href="/zh/projects/">全部作品</a>
+          </div>
+        </div>
+        <aside class="project-meta" aria-label="项目事实">
+          <div class="meta-row"><span>状态</span><strong><i class="status-dot"></i>公开 · 可运行</strong></div>
+          <div class="meta-row"><span>形态</span><strong>WebSearch + WebFetch + Runtime</strong></div>
+          <div class="meta-row"><span>语言</span><strong>Go 1.26</strong></div>
+          <div class="meta-row"><span>交付</span><strong>OpenAPI · Docker · Kubernetes</strong></div>
+        </aside>
+      </section>
+
+      <section class="project-story" aria-labelledby="why-title">
+        <div><h2 id="why-title">为什么做它。</h2></div>
+        <div class="story-copy">
+          <p>搜索可靠性远不只是发出一个 HTTP 请求，然后看到 200 就算成功。</p>
+          <p>不同 Provider 的查询语法、翻页状态、浏览器依赖、容量、CAPTCHA 行为与结果结构并不相同。正文读取还有另一组风险：SSRF、重定向、JavaScript 空壳页面、提取质量与格式转换。</p>
+          <p>SearchX 把这些复杂度收敛在两个原子服务里。WebSearch 返回排序后的链接与 opaque cursor；WebFetch 对公网 URL 施加显式策略，再把它转换为 canonical document。二者可以独立演进和部署，不必耦合成一个巨大的抓取进程。</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="architecture-title">
+        <div><h2 id="architecture-title">实现架构。</h2></div>
+        <div class="story-copy story-copy--wide">
+          <p>外部网关根据契约把请求交给对应服务；每个服务独立拥有策略、编排、Adapter 与降级路径。</p>
+          <figure class="architecture-figure">
+            <img src="/assets/searchx-architecture-zh.svg" alt="SearchX 架构：API 网关将请求分别路由到 WebSearch 与 WebFetch。公开 WebSearch 请求严格按 Provider 顺序执行，每个 Adapter 先租用一个 Profile，再规范化结果并加密 cursor。WebFetch 在 HTTP 路径校验并固定公网目标；降级到 Chromium 后只复查最终 URL，不固定 DNS，也不拦截子资源请求。两个服务共享 Go Runtime 与 Docker、Kubernetes 交付层。" />
+            <figcaption>两个可独立部署的服务只共享运行基础，不共享业务管线。</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="search-flow-title">
+        <div><h2 id="search-flow-title">WebSearch 链路。</h2></div>
+        <div class="story-copy">
+          <p>请求只规范化一次，随后只交给能够兑现声明语义的 Provider。</p>
+          <ol class="loop-steps">
+            <li><span>01</span><strong>契约入口</strong><p>Gin 校验请求、timeout、region、路由顺序、filters、高级 query options 与可选 opaque cursor。</p></li>
+            <li><span>02</span><strong>搜索计划</strong><p>能力感知编译器把受支持的操作符映射到 Brave 或 DuckDuckGo，并在执行前移除不兼容 Provider。</p></li>
+            <li><span>03</span><strong>缓存保护</strong><p>fresh 内存缓存与 <code>singleflight</code> 合并重复工作；实时搜索失败时，stale cache 作为明确标记的降级结果。</p></li>
+            <li><span>04</span><strong>有序 Provider 链</strong><p>公开请求严格按顺序执行 Provider Adapter，每个 Adapter 租用一个 Profile；首个有效结果胜出，可重试失败则进入下一个 Provider。</p></li>
+            <li><span>05</span><strong>Provider Adapter</strong><p>Baidu、Bing、Brave 与 DuckDuckGo Adapter 各自负责 transport、浏览器状态、parser 与类型化失败分类。</p></li>
+            <li><span>06</span><strong>稳定输出</strong><p>URL 先规范化，再执行域名规则和去重；AES-GCM 将 Provider continuation 加密到与原请求绑定的 cursor 中。</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="fetch-flow-title">
+        <div><h2 id="fetch-flow-title">WebFetch 链路。</h2></div>
+        <div class="story-copy">
+          <p>正文读取是一条具有可替换 seam 的显式管线，每个阶段都有明确的质量判断。</p>
+          <ol class="loop-steps">
+            <li><span>01</span><strong>安全目标</strong><p>URL Policy 只接受 HTTP(S)，拒绝凭据和危险端口，解析全部地址、屏蔽私网和保留地址，并固定已批准的 DNS 结果。</p></li>
+            <li><span>02</span><strong>站点策略</strong><p>按最长域名后缀和路径前缀选择可选站点策略；GenericStrategy 保留默认行为。</p></li>
+            <li><span>03</span><strong>HTTP 优先</strong><p>在分配浏览器资源前，先由有 body、redirect 与 timeout 上限的 HTTP Reader 读取。</p></li>
+            <li><span>04</span><strong>提取与评估</strong><p>MIME 检测选择 HTML 或纯文本提取器；Quality Evaluator 区分有效正文、JS 空壳、过短页面、登录墙与 CAPTCHA。</p></li>
+            <li><span>05</span><strong>浏览器降级</strong><p>满足条件的失败或需要渲染的页面进入有并发槽限制的 Chromium Adapter，随后再次走同一提取与质量链路；该分支会复查最终 URL，但不会固定 DNS 或拦截子资源请求。</p></li>
+            <li><span>06</span><strong>Canonical Output</strong><p>正文以与展示格式无关的形态缓存，再转换为 Markdown 或 text，并按 Unicode code point 截断。</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="stack-title">
+        <div><h2 id="stack-title">技术栈。</h2></div>
+        <div class="story-copy">
+          <p>技术栈刻意保持克制：以标准 Go 并发为主，只在浏览器自动化、正文提取与交付位置使用专门 Adapter。</p>
+          <div class="interface-grid">
+            <article class="interface-card">
+              <span>Runtime</span>
+              <h3>Go 1.26</h3>
+              <p><code>context</code>、goroutine、有界 channel、<code>singleflight</code>、类型化领域错误，以及方便确定性测试的依赖注入。</p>
+            </article>
+            <article class="interface-card">
+              <span>HTTP 与契约</span>
+              <h3>Gin + OpenAPI</h3>
+              <p>Gin 1.12 HTTP Adapter、严格 YAML、CORS、请求级 timeout、health/readiness 路由与版本化 API schema。</p>
+            </article>
+            <article class="interface-card">
+              <span>浏览器与解析</span>
+              <h3>chromedp + goquery</h3>
+              <p>Chrome DevTools Protocol 自动化、Provider parser、Readeck Readability、HTML-to-Markdown、MIME 检测与纯文本提取。</p>
+            </article>
+            <article class="interface-card">
+              <span>安全与状态</span>
+              <h3>SSRF Policy + AES-GCM</h3>
+              <p>HTTP Reader 路径使用 DNS/IP 规则与目标固定；搜索翻页使用加密、过期、与请求绑定的 opaque cursor。</p>
+            </article>
+            <article class="interface-card">
+              <span>交付</span>
+              <h3>Docker + Kubernetes</h3>
+              <p>WebSearch 与 WebFetch 使用独立 image 和 manifest，共享 Runtime helper，支持环境变量/YAML 覆盖并接入 API 网关。</p>
+            </article>
+            <article class="interface-card">
+              <span>验证</span>
+              <h3>Test · race · vet · build</h3>
+              <p>单元与集成 fixture、Provider parser、cursor 与 SSRF 测试、Go benchmark、race detection、vet，以及可复现的 curl、Python、Go 示例。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="delivered-title">
+        <div><h2 id="delivered-title">已经实现。</h2></div>
+        <div class="story-copy">
+          <ul class="check-list">
+            <li>Baidu、Bing、Brave、DuckDuckGo 有序执行，以及类型化失败处理、单 Profile 租约、容量状态、quarantine 与顺序 fallback。</li>
+            <li>能力感知的高级搜索、include/exclude domain 强制校验、URL 规范化、去重与加密 continuation cursor。</li>
+            <li>fresh/stale 内存缓存、重复请求合并、实时并发上限、队列上限与请求级 diagnostics。</li>
+            <li>HTTP 路径带 SSRF 防线的单 URL fetch、受限 redirect/body、HTML/纯文本提取、质量门禁与 Chromium fallback。</li>
+            <li>Markdown/text 转换、OpenAPI 契约、API 网关示例、本地 Demo、Docker image、Kubernetes manifest 与共享 logging/timeout helper。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="boundary-title">
+        <div><h2 id="boundary-title">诚实边界。</h2></div>
+        <div class="story-copy">
+          <p>SearchX 是 retrieval infrastructure，不是 answer engine。</p>
+          <ul class="check-list check-list--roadmap">
+            <li>WebSearch 返回 Provider 排序后的链接；它不会读取结果正文、调用 LLM、合成答案，也没有 semantic rerank 阶段。</li>
+            <li>容量感知的 auto router 可供内部调用，但公开 HTTP 请求会物化 Provider 列表并严格顺序降级；不会并行查询或聚合多个 Provider。</li>
+            <li>WebFetch 一次读取一个公网 URL；PDF、Office、图片、OCR、批量、登录页面、付费墙与 CAPTCHA 求解不在当前契约内。</li>
+            <li>HTTP Reader 会固定已校验的 DNS 目标并检查重定向；Chromium fallback 当前只复查最终 URL，不固定 DNS 或拦截子资源，因此两条路径的 SSRF 保证并不相同。</li>
+            <li>cache 与浏览器 Profile 按 Pod 本地保存；WebSearch 多副本需要共享 cursor secret，但两个服务都不依赖共享数据库。</li>
+          </ul>
+          <p><a class="evidence-link" href="https://github.com/ZoeImport/search-x/tree/main/websearch/internal">查看 WebSearch module ↗</a><br /><a class="evidence-link" href="https://github.com/ZoeImport/search-x/tree/main/webfetch/internal">查看 WebFetch module ↗</a></p>
+        </div>
+      </section>
+
+      <aside class="privacy-callout" aria-labelledby="evidence-title">
+        <span class="eyebrow">公开证据边界</span>
+        <h2 id="evidence-title">每项架构描述都能映射到公开代码。</h2>
+        <p>本页只描述公开仓库和其中已提交的契约，不包含 API Key、debug artifact、浏览器 Profile、个人搜索历史、运行日志或部署 Secret。</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div>
+          <p class="footer-title">搜索链接，审慎读取，明确降级。</p>
+          <p class="footer-copy">源码公开在 github.com/ZoeImport/search-x。</p>
+        </div>
+        <nav class="footer-links" aria-label="页脚导航">
+          <a href="/zh/projects/">全部作品</a>
+          <a href="/projects/looper/">Looper</a>
+          <a href="/zh/skills/">技能</a>
+          <a href="https://github.com/ZoeImport/search-x">GitHub ↗</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

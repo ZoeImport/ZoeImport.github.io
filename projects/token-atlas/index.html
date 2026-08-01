@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content="Token Atlas is a local-first, privacy-bounded observability dashboard for understanding AI tool activity across multiple coding clients." />
+    <meta property="og:title" content="Token Atlas — Local-first AI Observability" />
+    <meta property="og:description" content="A local-first, privacy-bounded observability dashboard for understanding AI tool activity across multiple coding clients." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="canonical" href="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="alternate" hreflang="en" href="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://zoeimport.github.io/zh/projects/token-atlas/" />
+    <link rel="alternate" hreflang="x-default" href="https://zoeimport.github.io/projects/token-atlas/" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>Token Atlas — Local-first AI Observability</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href="/">ZoeImport<span>.</span></a>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <a href="/interests/">Interests</a>
+          <a href="/skills/">Skills</a>
+          <a href="/projects/" aria-current="page">Projects</a>
+          <a class="github-nav" href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+          <span class="language-switch" aria-label="Language switch">
+            <span aria-current="true">EN</span>
+            <a href="/zh/projects/token-atlas/" lang="zh-CN" hreflang="zh-CN">中文</a>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page-shell">
+      <section class="project-hero" aria-labelledby="project-title">
+        <div>
+          <span class="eyebrow">Project 03 / Local-first AI Observability</span>
+          <h1 id="project-title">Token Atlas<em>.</em></h1>
+          <p class="lede">A local-first, privacy-bounded observability dashboard for understanding AI tool activity across multiple coding clients.</p>
+          <div class="project-actions">
+            <a class="button button--solid" href="/projects/">All projects</a>
+            <a class="button" href="https://github.com/ZoeImport" rel="me">GitHub profile ↗</a>
+          </div>
+        </div>
+        <aside class="project-meta" aria-label="Project facts">
+          <div class="meta-row"><span>Status</span><strong><i class="status-dot"></i>Public case study · private instance</strong></div>
+          <div class="meta-row"><span>Shape</span><strong>Collector + ingest + local dashboard</strong></div>
+          <div class="meta-row"><span>Storage</span><strong>SQLite events &amp; rollups</strong></div>
+          <div class="meta-row"><span>Delivery</span><strong>Bilingual UI · Docker</strong></div>
+        </aside>
+      </section>
+
+      <section class="project-story" aria-labelledby="why-title">
+        <div><h2 id="why-title">Why it exists.</h2></div>
+        <div class="story-copy">
+          <p>Understanding AI tool usage should not require uploading private context to a service you do not control.</p>
+          <p>Multiple local coding clients each record their own prompts, responses, and token usage. Seeing the combined structure — how much work happens in which client, across which time windows — helps tune context, caching, and spending.</p>
+          <p>Token Atlas is local-first and privacy-bounded: collection runs on your own machines, transport is authenticated and private, and only a bounded, sanitized view is ever summarized for public explanation.</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="architecture-title">
+        <div><h2 id="architecture-title">Implementation architecture.</h2></div>
+        <div class="story-copy story-copy--wide">
+          <p>An incremental collector deduplicates, normalizes, and redacts events before they travel through an authenticated private transport to an ingest API that persists SQLite events and rollups.</p>
+          <figure class="architecture-figure">
+            <img src="/assets/token-atlas-architecture.svg" alt="Token Atlas architecture: local AI coding clients feed an incremental collector and sanitizer. The collector sends normalized events through an authenticated private transport to an ingest and dashboard API, which persists SQLite events and rollups that drive the bilingual Token Atlas UI. A bounded bilingual briefing artifact describes the architecture and token definitions without publishing raw telemetry." />
+            <figcaption>Private pipeline in, bounded bilingual briefing out.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="token-metric-title">
+        <div><h2 id="token-metric-title">How tokens are counted.</h2></div>
+        <div class="story-copy">
+          <p>Two aggregates keep the metric clear and avoid double counting:</p>
+          <ul class="check-list">
+            <li><strong>Fresh Tokens</strong> = non-cached input + output + reasoning</li>
+            <li><strong>Processed Tokens</strong> = Fresh Tokens + cache reads</li>
+          </ul>
+          <p>Cache input, cache output, and cache reasoning are mutually exclusive fields after normalization, so the same tokens are never added twice.</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="ranges-title">
+        <div><h2 id="ranges-title">Time windows.</h2></div>
+        <div class="story-copy">
+          <p>The dashboard offers 7-, 30-, and 90-day ranges. Selected ranges are prefetched in parallel and kept in sync with the URL state, so switching a range never mixes live API data with a stale static snapshot.</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="boundary-title">
+        <div><h2 id="boundary-title">Honest boundaries.</h2></div>
+        <div class="story-copy">
+          <p>Token Atlas is a case study about a private instance, not a published product demo.</p>
+          <ul class="check-list check-list--roadmap">
+            <li>The public page publishes architecture and token definitions only; it never publishes real usage telemetry, prompts, responses, session labels, local paths, hosts, ports, databases, or credentials.</li>
+            <li>Any illustrated values on this site are synthetic or value-free; they are not drawn from the running instance.</li>
+            <li>No private instance URL is provided, and no access tokens are placed in the Pages repository.</li>
+            <li>Normalization guarantees cache input, output, and reasoning are mutually exclusive before rollups, so Processed Tokens are not inflated by repeated counts.</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="privacy-callout" aria-labelledby="evidence-title">
+        <span class="eyebrow">Public evidence boundary</span>
+        <h2 id="evidence-title">The case study is the boundary.</h2>
+        <p>This page explains what the dashboard measures and how tokens are counted. It does not contain usage statistics, session data, access tokens, environment variables, or any private run details from the Token Atlas instance.</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div>
+          <p class="footer-title">Understand usage. Stay local. Stay honest.</p>
+          <p class="footer-copy">Token Atlas keeps the full picture private and publishes only a bounded explanation.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="/projects/">All projects</a>
+          <a href="/projects/search-x/">SearchX</a>
+          <a href="/interests/">Interests</a>
+          <a href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
