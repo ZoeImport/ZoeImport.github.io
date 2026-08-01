@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content="Looper 是一个从经过验证的 Rust Core 演进而来的完整、可插拔 Agent Runtime，为真实业务开发提供扩展接口。" />
+    <meta property="og:title" content="Looper — 可插拔 Agent Runtime" />
+    <meta property="og:description" content="一个稳定的执行 Core，配以可扩展的 Model、Tool、Memory、Storage、Event、Policy 与 Transport 接口。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://zoeimport.github.io/zh/projects/looper/" />
+    <link rel="canonical" href="https://zoeimport.github.io/zh/projects/looper/" />
+    <link rel="alternate" hreflang="en" href="https://zoeimport.github.io/projects/looper/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://zoeimport.github.io/zh/projects/looper/" />
+    <link rel="alternate" hreflang="x-default" href="https://zoeimport.github.io/projects/looper/" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>Looper — 可插拔 Agent Runtime</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href="/zh/">ZoeImport<span>.</span></a>
+        <nav class="primary-nav" aria-label="主导航">
+          <a href="/zh/interests/">兴趣</a>
+          <a href="/zh/skills/">技能</a>
+          <a href="/zh/projects/" aria-current="page">作品</a>
+          <a class="github-nav" href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+          <span class="language-switch" aria-label="语言切换">
+            <a href="/projects/looper/" lang="en" hreflang="en">EN</a>
+            <span aria-current="true">中文</span>
+          </span>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page-shell">
+      <section class="project-hero" aria-labelledby="project-title">
+        <div>
+          <span class="eyebrow">项目 01 / 可插拔 Agent Runtime</span>
+          <h1 id="project-title">Looper<em>.</em></h1>
+          <p class="lede">一个从经过验证的 Rust Core 演进而来的完整、可插拔 Agent Runtime，用稳定接口让真实产品接入自己的能力。</p>
+          <div class="project-actions">
+            <a class="button button--solid" href="https://github.com/ZoeImport?tab=repositories" rel="me">在 GitHub 上关注 ↗</a>
+            <a class="button" href="/zh/projects/">全部作品</a>
+          </div>
+        </div>
+        <aside class="project-meta" aria-label="项目信息">
+          <div class="meta-row"><span>状态</span><strong><i class="status-dot"></i>Core 分片运行中</strong></div>
+          <div class="meta-row"><span>方向</span><strong>完整的可插拔 Runtime</strong></div>
+          <div class="meta-row"><span>当前</span><strong>Rust Core · CLI · HTTP/SSE</strong></div>
+          <div class="meta-row"><span>源码</span><strong>ZoeImport/Looper · 准备中</strong></div>
+        </aside>
+      </section>
+
+      <section class="project-story" aria-labelledby="why-title">
+        <div><h2 id="why-title">为什么存在。</h2></div>
+        <div class="story-copy">
+          <p>当模型调用、状态变更、流式输出与副作用坍缩进一个不透明的函数时，Agent 系统会变得难以推理。</p>
+          <p>Looper 把这些职责拆进一个可见的执行生命周期。当前仓库从单个 session、单次前台运行、一个内存事件存储和模拟模型效果开始——这是第一个经过验证的实现切片，不是最终产品范围。</p>
+          <p>目标是完整的 Runtime 模块：Core 保持执行语义自洽，扩展接口让真实业务应用无需 fork 或重写循环就能替换能力。</p>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="shape-title">
+        <div><h2 id="shape-title">Core 与扩展。</h2></div>
+        <div class="story-copy">
+          <p>Core 拥有不变量；扩展拥有产品之间必须变化的部分。</p>
+          <div class="architecture-split">
+            <article class="architecture-panel architecture-panel--core">
+              <span class="eyebrow">Core / 稳定的执行模块</span>
+              <h3>一个覆盖完整生命周期的小接口。</h3>
+              <p>Core 负责 session 与 run 状态、命令排序、纯决策、持久事实、效果调度、事件发布与恢复语义。</p>
+              <dl class="state-list">
+                <div><dt>正在运行</dt><dd>单 session Mailbox、纯决策与 Reducer、内存 Event Store、Event Bus 与模拟效果。</dd></div>
+                <div><dt>演进目标</dt><dd>持久化恢复、取消、多 session 监督、重试，以及在同一个 Runtime 接口背后拒绝迟到结果。</dd></div>
+              </dl>
+            </article>
+            <article class="architecture-panel">
+              <span class="eyebrow">扩展 / 可替换的 Adapter</span>
+              <h3>真实能力在明确的 seam 上接入 Core。</h3>
+              <p>产品为外部与业务特定行为注入 Adapter。Looper 定义生命周期契约与错误模式；每个应用选择具体实现。</p>
+              <dl class="state-list">
+                <div><dt>已有证明</dt><dd>模拟模型、内存存储、CLI、HTTP/SSE 与 React 检视 Adapter。</dd></div>
+                <div><dt>演进目标</dt><dd>面向生产 Adapter 与插件的版本化发现、配置、隔离、健康、升级与优雅下线。</dd></div>
+              </dl>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="interfaces-title">
+        <div><h2 id="interfaces-title">扩展接口。</h2></div>
+        <div class="story-copy">
+          <p>每个接口描述调用方在它的 seam 上必须知道什么。Adapter 可以更换，而不会把 provider 或部署复杂度泄漏进 Core。</p>
+          <div class="interface-grid">
+            <article class="interface-card">
+              <span>01 / 切片已存在</span>
+              <h3>Model</h3>
+              <p>推理、流式增量、完成、用量元数据、取消与 provider 错误。当前证明使用模拟流式 Adapter；真实 provider 是下一步。</p>
+            </article>
+            <article class="interface-card">
+              <span>02 / 契约已规划</span>
+              <h3>Tool</h3>
+              <p>能力发现、schema 校验、执行、进度、结果与失败，面向本地工具、MCP 服务器或产品自有动作。</p>
+            </article>
+            <article class="interface-card">
+              <span>03 / 内存 Adapter 已存在</span>
+              <h3>Memory / Storage</h3>
+              <p>当前 Event Store 在内存中。接口将支持持久化 session 事件、快照、工件，以及可选的长时记忆实现。</p>
+            </article>
+            <article class="interface-card">
+              <span>04 / 流已存在</span>
+              <h3>Event</h3>
+              <p>有序的运行时事实与临时进度，供 UI 订阅者、审计日志、指标、trace、索引与产品工作流使用。</p>
+            </article>
+            <article class="interface-card">
+              <span>05 / 契约已规划</span>
+              <h3>Policy</h3>
+              <p>权限、预算、审批、沙箱要求、组织规则，以及允许、拒绝或暂停某个效果的决策。</p>
+            </article>
+            <article class="interface-card">
+              <span>06 / Adapter 已存在</span>
+              <h3>Transport</h3>
+              <p>CLI 与 HTTP/SSE 今天已经证明这个 seam。未来的 Adapter 可以暴露 JSON-RPC、队列、worker 或应用特定接口。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="loop-title">
+        <div><h2 id="loop-title">运行闭环。</h2></div>
+        <div class="story-copy">
+          <p>每个被接受的命令都走完同样的一组显式阶段。</p>
+          <ol class="loop-steps">
+            <li><span>01</span><strong>Mailbox</strong><p>为单个 session actor 串行化命令与已完成的效果。</p></li>
+            <li><span>02</span><strong>decide()</strong><p>根据当前状态与输入纯计算领域事件与请求的效果。</p></li>
+            <li><span>03</span><strong>Event Store</strong><p>先持久化持久事实；原型使用内存 Adapter。</p></li>
+            <li><span>04</span><strong>Reducer</strong><p>应用已存储事件重建 session 的内存状态。</p></li>
+            <li><span>05</span><strong>Event Bus</strong><p>向订阅者发布持久事实与临时流式增量。</p></li>
+            <li><span>06</span><strong>Effect Runner</strong><p>执行请求的工作并把结果送回 Mailbox，闭环结束。</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="now-title">
+        <div><h2 id="now-title">今天已运行的能力。</h2></div>
+        <div class="story-copy">
+          <p>当前里程碑证明最小 Core 闭环及其第一批 Adapter。它尚未宣称具备完整的生产级 Runtime。</p>
+          <ul class="check-list">
+            <li>类型化的 command、run、effect、session 与 event 标识符。</li>
+            <li>一个纯决策函数与带领域焦点测试的 Reducer。</li>
+            <li>一个 Tokio Mailbox、命令接收、广播 Event Bus 与模拟流式 Effect Runner。</li>
+            <li>一个打印持久事件与实时增量的 CLI。</li>
+            <li>一个 Axum HTTP/SSE Adapter 与一个 React Runtime Inspector。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="business-title">
+        <div><h2 id="business-title">真实业务集成。</h2></div>
+        <div class="story-copy">
+          <p>Looper 是无头 Runtime 模块，不是预先选定的业务 Agent。</p>
+          <div class="business-grid">
+            <article>
+              <span>01</span>
+              <h3>产品拥有领域。</h3>
+              <p>编码助手、浏览器操作器、数据诊断 Agent 或实验运行器定义自己的工作流、prompt、数据、UI 与业务规则。</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Adapter 带来真实能力。</h3>
+              <p>产品在 Looper 的扩展 seam 上提供 Model、Tool、Memory 或 Storage、Event、Policy 与 Transport Adapter。</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Core 保持执行自洽。</h3>
+              <p>Looper 在每一条业务集成上拥有生命周期、顺序、状态转换、效果、恢复语义与可观察事件。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-story" aria-labelledby="next-title">
+        <div><h2 id="next-title">接下来做什么。</h2></div>
+        <div class="story-copy">
+          <p>这些里程碑加深现有 Core，并把已规划的扩展 seam 变成生产就绪接口。它们是路线图事项，不是当前能力声明。</p>
+          <ul class="check-list check-list--roadmap">
+            <li>持久化 Storage Adapter、快照、恢复与重放。</li>
+            <li>带取消与结构化失败的生产 Model 与 Tool 接口。</li>
+            <li>面向业务应用的 Memory、Event sink 与 Policy Adapter。</li>
+            <li>多 session 监督、迟到结果拒绝、重试与优雅关闭。</li>
+            <li>带版本化协议契约的进程外插件发现与隔离。</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="privacy-callout" aria-labelledby="privacy-title">
+        <span class="eyebrow">公开数据边界</span>
+        <h2 id="privacy-title">案例是公开的，个人运行数据不是。</h2>
+        <p>本页只包含架构描述与合成的展示内容。它不发布私有 prompt、response、token 用量、本地项目标签、文件路径、主机细节、数据库内容或凭据。</p>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div>
+          <p class="footer-title">Core 优先。在业务差异处扩展。</p>
+          <p class="footer-copy">公开仓库链接将在该仓库创建后指向 github.com/ZoeImport/Looper。</p>
+        </div>
+        <nav class="footer-links" aria-label="页脚导航">
+          <a href="/zh/projects/">全部作品</a>
+          <a href="/zh/skills/">技能</a>
+          <a href="/zh/interests/">兴趣</a>
+          <a href="https://github.com/ZoeImport" rel="me">GitHub ↗</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
