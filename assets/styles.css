@@ -4,7 +4,7 @@
   --ink: #171713;
   --muted: #6f6b63;
   --line: #ccc2b4;
-  --clay: #ad4a2e;
+  --clay: #a85c3c;
   --sage: #66796b;
   --white: #fffdf8;
   --max: 1240px;
@@ -1696,7 +1696,7 @@ html[lang="zh-CN"] .story-copy > p:first-child {
 .project-hero::before {
   width: 44vmax; height: 44vmax;
   top: -18vmax; right: -12vmax;
-  background: radial-gradient(circle, rgba(173,74,46,0.16), transparent 65%);
+  background: radial-gradient(circle, rgba(168,92,60,0.16), transparent 65%);
   animation: hero-drift 18s ease-in-out infinite alternate;
 }
 .project-hero::after {
