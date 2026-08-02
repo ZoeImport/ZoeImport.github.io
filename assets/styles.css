@@ -1658,7 +1658,7 @@ html[lang="zh-CN"] .story-copy > p:first-child {
 .reveal.js-pending {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 600ms ease, transform 600ms ease;
+  transition: opacity 600ms cubic-bezier(.165,.84,.44,1), transform 600ms cubic-bezier(.165,.84,.44,1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 .reveal.js-pending.is-in {
@@ -1672,40 +1672,47 @@ html[lang="zh-CN"] .story-copy > p:first-child {
   to { opacity: 1; transform: none; }
 }
 .project-hero > * {
-  animation: hero-rise 650ms ease both;
+  animation: hero-rise 650ms cubic-bezier(.165,.84,.44,1) both;
   position: relative;
   z-index: 1;
 }
 .project-hero > *:nth-child(2) { animation-delay: 90ms; }
 .project-hero > *:nth-child(3) { animation-delay: 180ms; }
 
-/* Soft clay/sage glows behind the hero — restrained, in the same spirit
-   as the pointer glow on the home page. */
-.project-hero { position: relative; overflow: clip; }
-.project-hero::before,
-.project-hero::after {
+/* Logo "stamp" micro-motion — ink pressing into paper (hover only) */
+.wordmark { position: relative; transition: transform .18s cubic-bezier(.165,.84,.44,1); }
+.wordmark::after {
   content: "";
   position: absolute;
-  z-index: 0;
-  border-radius: 50%;
-  filter: blur(64px);
-  opacity: 0.55;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,.45) 50%, transparent 60%);
+  background-size: 200% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  transition: opacity .12s;
   pointer-events: none;
-  will-change: transform;
 }
-.project-hero::before {
-  width: 44vmax; height: 44vmax;
-  top: -18vmax; right: -12vmax;
-  background: radial-gradient(circle, rgba(168,92,60,0.16), transparent 65%);
-  animation: hero-drift 18s ease-in-out infinite alternate;
+.wordmark:hover { transform: scale(.985); }
+.wordmark:hover::after {
+  opacity: 1;
+  background-position: -20% 0;
+  transition: background-position .5s ease-out;
 }
-.project-hero::after {
-  width: 38vmax; height: 38vmax;
-  bottom: -16vmax; left: -10vmax;
-  background: radial-gradient(circle, rgba(102,121,107,0.15), transparent 65%);
-  animation: hero-drift 22s ease-in-out infinite alternate-reverse;
+
+/* Footer sun-dial — a stamp-sized diurnal arc, slowest environmental gear */
+.sun-dial { color: var(--muted); animation: sun-tint 20s linear infinite; }
+.sun-dial .sun { animation: sun-arc 20s linear infinite; }
+@keyframes sun-arc {
+  0%   { transform: translate(3px, 6px); }
+  50%  { transform: translate(12px, 0px); }
+  100% { transform: translate(21px, 6px); }
 }
-@keyframes hero-drift {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(3vmax, 2vmax, 0) scale(1.06); }
+@keyframes sun-tint {
+  0%, 100% { color: var(--muted); }
+  50%      { color: var(--clay); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sun-dial, .sun-dial .sun { animation: none; }
+  .sun-dial .sun { transform: translate(12px, 0px); }
+  .wordmark::after { display: none; }
 }
