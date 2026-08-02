@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
-    <meta name="description" content="ZoeImport 在 Rust、TypeScript、Agent Runtime 设计与 Go 后端系统方面的实践技能。" />
+    <meta name="description" content="ZoeImport 在 Go 后端、React 与 TypeScript、Kubernetes、Rust、ArchLinux 与 Agent 运行时调研方面的实践技能。" />
     <meta property="og:title" content="技能 — ZoeImport" />
     <meta property="og:description" content="以可观测的项目证据说明技能，而不是使用任意的熟练度进度条。" />
     <meta property="og:type" content="website" />
@@ -48,53 +48,77 @@
       <section class="section" aria-label="技能分组">
         <div class="skill-grid">
           <article class="skill-card">
-            <span class="card-number">01 / Runtime Core</span>
-            <h2>Rust 与 Tokio</h2>
-            <p>类型化领域事件、纯决策函数、Reducer、Actor、mpsc mailbox、oneshot receipt、broadcast event bus 与异步 Effect 执行。</p>
-            <ul class="tag-list" aria-label="Rust 与 Tokio 技能">
-              <li>Rust</li>
-              <li>Tokio</li>
-              <li>Async</li>
-              <li>状态机</li>
+            <span class="card-number">01 / 后端</span>
+            <h2>Go 后端工程</h2>
+            <p>带显式契约的类型化 Go 服务：Provider-aware WebSearch、带 SSRF 防护的 WebFetch、显式缓存与降级，以及可观测性。</p>
+            <ul class="tag-list" aria-label="Go 后端技能">
+              <li>Go</li>
+              <li>gin</li>
+              <li>REST API</li>
+              <li>缓存</li>
+              <li>可观测性</li>
             </ul>
-            <a class="evidence-link" href="/zh/projects/looper/">证据：Looper ↗</a>
+            <a class="evidence-link" href="/zh/projects/search-x/">证据：SearchX ↗</a>
           </article>
           <article class="skill-card">
-            <span class="card-number">02 / Web Adapter</span>
-            <h2>TypeScript 与 React</h2>
-            <p>构建消费类型化事件、渲染流式状态的轻量浏览器界面，并让它与 Runtime 的领域模型保持分离。</p>
-            <ul class="tag-list" aria-label="TypeScript 与 React 技能">
-              <li>TypeScript</li>
+            <span class="card-number">02 / 前端</span>
+            <h2>React 与 TypeScript</h2>
+            <p>类型安全的前端界面：渲染流式状态，并与后端领域模型保持解耦。</p>
+            <ul class="tag-list" aria-label="React 与 TypeScript 技能">
               <li>React</li>
+              <li>TypeScript</li>
               <li>Vite</li>
               <li>SSE</li>
             </ul>
             <a class="evidence-link" href="/zh/projects/looper/">证据：Runtime Inspector ↗</a>
           </article>
           <article class="skill-card">
-            <span class="card-number">03 / Architecture</span>
-            <h2>Agent 系统设计</h2>
-            <p>把模型、工具、记忆、权限与插件行为拆成明确接口，形成可测试的扩展缝与诚实的职责归属。</p>
-            <ul class="tag-list" aria-label="Agent 系统设计技能">
-              <li>Agent Harness</li>
-              <li>Ports &amp; Adapters</li>
-              <li>Effects</li>
-              <li>Plugins</li>
-            </ul>
-            <a class="evidence-link" href="/zh/interests/">阅读设计原则 ↗</a>
-          </article>
-          <article class="skill-card">
-            <span class="card-number">04 / Systems</span>
-            <h2>后端工程</h2>
-            <p>类型化 Go 服务：HTTP 接口、持久化边界、进程隔离、运行诊断，以及尊重隐私的数据流。</p>
-            <ul class="tag-list" aria-label="后端工程技能">
-              <li>Go</li>
-              <li>gin</li>
-              <li>gorm</li>
-              <li>REST APIs</li>
-              <li>Observability</li>
+            <span class="card-number">03 / 基础设施</span>
+            <h2>Kubernetes 与容器部署</h2>
+            <p>在自建单节点集群（minikube）上部署与运维服务：Deployment、Secret、hostPath 存储、容器镜像与 Cloudflare 隧道。</p>
+            <ul class="tag-list" aria-label="Kubernetes 技能">
+              <li>Kubernetes</li>
+              <li>minikube</li>
+              <li>Docker</li>
+              <li>Cloudflare Tunnel</li>
             </ul>
             <a class="evidence-link" href="/zh/projects/search-x/">证据：SearchX ↗</a>
+          </article>
+          <article class="skill-card">
+            <span class="card-number">04 / 系统</span>
+            <h2>Rust 与 Tokio</h2>
+            <p>类型化事件驱动系统：领域事件、纯决策函数、Reducer、Actor、Tokio 异步与 Effect 执行。</p>
+            <ul class="tag-list" aria-label="Rust 技能">
+              <li>Rust</li>
+              <li>Tokio</li>
+              <li>Async</li>
+              <li>Actor</li>
+            </ul>
+            <a class="evidence-link" href="/zh/projects/looper/">证据：Looper ↗</a>
+          </article>
+          <article class="skill-card">
+            <span class="card-number">05 / 平台</span>
+            <h2>ArchLinux — 4 年日常使用维护</h2>
+            <p>四年 ArchLinux 日常桌面与服务器使用维护：滚动更新、systemd 服务、软件包管理与 dotfiles 配置管理。</p>
+            <ul class="tag-list" aria-label="ArchLinux 技能">
+              <li>ArchLinux</li>
+              <li>systemd</li>
+              <li>pacman</li>
+              <li>dotfiles</li>
+            </ul>
+            <a class="evidence-link" href="https://github.com/ZoeImport/dot">证据：dotfiles ↗</a>
+          </article>
+          <article class="skill-card">
+            <span class="card-number">06 / 调研</span>
+            <h2>Agent 运行时架构调研</h2>
+            <p>进行中的 Agent 运行时架构调研：扩展模型、进程外插件、trace-first 可观测性，以及 harness 与产品之间的边界。</p>
+            <ul class="tag-list" aria-label="Agent 运行时调研技能">
+              <li>Agent 运行时</li>
+              <li>插件</li>
+              <li>Trace-first</li>
+              <li>设计</li>
+            </ul>
+            <a class="evidence-link" href="/zh/interests/">阅读设计原则 ↗</a>
           </article>
         </div>
       </section>

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
-    <meta name="description" content="ZoeImport's practical skills across Rust, TypeScript, agent runtime design, and Go backend systems." />
+    <meta name="description" content="ZoeImport's practical skills across Go backends, React + TypeScript, Kubernetes, Rust, ArchLinux, and agent-runtime research." />
     <meta property="og:title" content="Skills — ZoeImport" />
     <meta property="og:description" content="Skills connected to observable project evidence rather than arbitrary proficiency bars." />
     <meta property="og:type" content="website" />
@@ -47,53 +47,77 @@
       <section class="section" aria-label="Skill groups">
         <div class="skill-grid">
           <article class="skill-card">
-            <span class="card-number">01 / Runtime core</span>
-            <h2>Rust &amp; Tokio</h2>
-            <p>Typed domain events, pure decision functions, reducers, actors, mpsc mailboxes, oneshot receipts, broadcast event buses, and async effect execution.</p>
-            <ul class="tag-list" aria-label="Rust and Tokio skills">
-              <li>Rust</li>
-              <li>Tokio</li>
-              <li>Async</li>
-              <li>State machines</li>
+            <span class="card-number">01 / Backend</span>
+            <h2>Go backend engineering</h2>
+            <p>Typed Go services behind HTTP with explicit contracts — provider-aware WebSearch, SSRF-guarded WebFetch, explicit caching and degradation, and observability.</p>
+            <ul class="tag-list" aria-label="Go backend skills">
+              <li>Go</li>
+              <li>gin</li>
+              <li>REST APIs</li>
+              <li>Caching</li>
+              <li>Observability</li>
             </ul>
-            <a class="evidence-link" href="/projects/looper/">Evidence: Looper ↗</a>
+            <a class="evidence-link" href="/projects/search-x/">Evidence: SearchX ↗</a>
           </article>
           <article class="skill-card">
-            <span class="card-number">02 / Web adapter</span>
-            <h2>TypeScript &amp; React</h2>
-            <p>Small browser interfaces that consume typed events, render streaming state, and stay separate from the runtime’s domain model.</p>
-            <ul class="tag-list" aria-label="TypeScript and React skills">
-              <li>TypeScript</li>
+            <span class="card-number">02 / Frontend</span>
+            <h2>React &amp; TypeScript</h2>
+            <p>Type-safe browser interfaces that render streaming state and stay decoupled from backend domain models.</p>
+            <ul class="tag-list" aria-label="React and TypeScript skills">
               <li>React</li>
+              <li>TypeScript</li>
               <li>Vite</li>
               <li>SSE</li>
             </ul>
             <a class="evidence-link" href="/projects/looper/">Evidence: Runtime Inspector ↗</a>
           </article>
           <article class="skill-card">
-            <span class="card-number">03 / Architecture</span>
-            <h2>Agent system design</h2>
-            <p>Breaking model, tool, memory, permission, and plugin behavior into explicit interfaces with testable seams and honest ownership.</p>
-            <ul class="tag-list" aria-label="Agent system design skills">
-              <li>Agent harnesses</li>
-              <li>Ports &amp; adapters</li>
-              <li>Effects</li>
-              <li>Plugins</li>
+            <span class="card-number">03 / Infrastructure</span>
+            <h2>Kubernetes &amp; container deployment</h2>
+            <p>Deploying and operating services on a self-hosted single-node cluster (minikube) — Deployments, Secrets, hostPath storage, container images, and Cloudflare tunnels.</p>
+            <ul class="tag-list" aria-label="Kubernetes skills">
+              <li>Kubernetes</li>
+              <li>minikube</li>
+              <li>Docker</li>
+              <li>Cloudflare Tunnel</li>
             </ul>
-            <a class="evidence-link" href="/interests/">Read the principles ↗</a>
+            <a class="evidence-link" href="/projects/search-x/">Evidence: SearchX ↗</a>
           </article>
           <article class="skill-card">
             <span class="card-number">04 / Systems</span>
-            <h2>Backend engineering</h2>
-            <p>Typed Go services behind HTTP, with persistence boundaries, process isolation, operational diagnostics, and privacy-aware data flows.</p>
-            <ul class="tag-list" aria-label="Backend engineering skills">
-              <li>Go</li>
-              <li>gin</li>
-              <li>gorm</li>
-              <li>REST APIs</li>
-              <li>Observability</li>
+            <h2>Rust &amp; Tokio</h2>
+            <p>Typed event-driven systems — domain events, pure decision functions, reducers, actors, Tokio async, and effect execution.</p>
+            <ul class="tag-list" aria-label="Rust skills">
+              <li>Rust</li>
+              <li>Tokio</li>
+              <li>Async</li>
+              <li>Actors</li>
             </ul>
-            <a class="evidence-link" href="/projects/search-x/">Evidence: SearchX ↗</a>
+            <a class="evidence-link" href="/projects/looper/">Evidence: Looper ↗</a>
+          </article>
+          <article class="skill-card">
+            <span class="card-number">05 / Platform</span>
+            <h2>ArchLinux — 4 years of daily use</h2>
+            <p>Four years of ArchLinux as a daily desktop and server platform — rolling-release maintenance, systemd services, packaging, and dotfile-driven configuration.</p>
+            <ul class="tag-list" aria-label="ArchLinux skills">
+              <li>ArchLinux</li>
+              <li>systemd</li>
+              <li>pacman</li>
+              <li>dotfiles</li>
+            </ul>
+            <a class="evidence-link" href="https://github.com/ZoeImport/dot">Evidence: dotfiles ↗</a>
+          </article>
+          <article class="skill-card">
+            <span class="card-number">06 / Research</span>
+            <h2>Agent runtime research</h2>
+            <p>Ongoing architecture research on agent runtimes — extension models, out-of-process plugins, trace-first observability, and the harness/product boundary.</p>
+            <ul class="tag-list" aria-label="Agent runtime research skills">
+              <li>Agent runtime</li>
+              <li>Plugins</li>
+              <li>Trace-first</li>
+              <li>Design</li>
+            </ul>
+            <a class="evidence-link" href="/interests/">Read the design principles ↗</a>
           </article>
         </div>
       </section>
